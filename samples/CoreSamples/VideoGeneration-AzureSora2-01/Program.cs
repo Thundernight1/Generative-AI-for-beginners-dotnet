@@ -116,6 +116,10 @@ async Task<string> Sora(string prompt, string size = "720x1280", int seconds = 4
         if (videoResp.IsSuccessStatusCode)
         {
             Console.WriteLine("\nDownloading the video...");
+            if (outputFilename == null || outputFilename.Contains("../") || outputFilename.Contains(@"..\"))
+            {
+                throw new ArgumentException("Invalid file path");
+            }
             using (var fs = new FileStream(outputFilename, FileMode.Create, FileAccess.Write))
             {
                 await videoResp.Content.CopyToAsync(fs);
